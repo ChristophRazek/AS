@@ -18,7 +18,7 @@ connx_string = r'DRIVER={SQL Server}; server=172.19.128.2\emeadb; database=emea_
 conx = pyodbc.connect(connx_string)
 
 def update():
-    Email.get_mail()
+    #Email.get_mail()
 
     #Import CSV
     df = pd.read_csv(r'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
