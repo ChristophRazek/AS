@@ -18,7 +18,7 @@ connx_string = r'DRIVER={SQL Server}; server=172.19.128.2\emeadb; database=emea_
 conx = pyodbc.connect(connx_string)
 
 def update():
-    #Email.get_mail()
+    Email.get_mail()
 
     #Import CSV
     df = pd.read_csv(r'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
@@ -42,23 +42,23 @@ def update():
 
 
 
-    #Separate Multiple Ref Numbers
-        #Creating a List-Like Format
+    #Aufteilen von Einträgen, die mehrere GÜLTIGE Referenznummern haben
+    #####Creating a List-Like Format
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].apply(lambda x: '[' + x + ']')
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace('/', ',', regex=True)
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace(',', ',', regex=True)
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace(';', ',', regex=True)
     df_mult_ref = df_mult_ref.drop('Laenge', axis ='columns')
 
-        #Pandas Function "Explode" to create rows of List Objects
+    #####Pandas Function "Explode" to create rows of List Objects
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].apply(literal_eval)
     df_mult_ref=df_mult_ref.explode('Ref.')
 
-    #Combine all valid References
+    #Kombiniere alle Referenznummern (ursprünglich richtige und aufgeteilte)
     query_union = """select * from df_clean union select * from df_mult_ref """
     df_total = ps.sqldf(query_union)
 
-    #Find Duplicates
+    #Finde Duplikate
     df_duplicates = df_total[df_total['Ref.'].duplicated()==True]
     df_total = df_total.drop_duplicates(subset='Ref.')
 
