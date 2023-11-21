@@ -3,7 +3,10 @@ import pyodbc
 from ast import literal_eval
 import pandasql as ps
 import warnings
-import Email 
+import Email
+
+
+#Feedback
 
 #IMPORT UND DATENBEREINIGUNG DER ANDREAS SCHMIED INFORMATIONEN
 #ERSTELLUNG DER FEHLERPROTOKOLLE
