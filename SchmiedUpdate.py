@@ -22,9 +22,10 @@ def update():
 
     #Import CSV
     df = pd.read_csv(r'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
-    df = df[['Ref.', 'ETD', 'ATD', 'ETA', 'ATA', 'DeliveryDate', 'Zollproblem']]
+    df = df[['Ref.', 'ETD', 'ATD', 'ETA', 'ATA', 'DeliveryDate','Versanddatum', 'Zollproblem']]
     df['Ref.'] = df['Ref.'].str.strip()
     df['Laenge'] = df['Ref.'].str.len()
+
 
     #Aufteilen der Daten in jene mit 1 Referenznummer und jenen mit mehreren
     df_clean = df[df['Laenge'] == 7].drop('Laenge', axis = 'columns')

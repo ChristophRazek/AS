@@ -22,10 +22,17 @@ df_total = schmied.update()
 df_total.rename(columns={'Ref.':'Reference'}, inplace=True)
 df_total['Reference']= df_total['Reference'].astype('int64')
 
+
+
 #Verbinde offene Bestellungen mit Schmied Update
 df_final = pd.merge(df_bestellpos, df_total, on='Reference', how='left')
+df_final['Versanddatum'] = df_final['Versanddatum'].fillna(value='01.01.1900')
+
+#Wenn Überschriebenes Lieferdatum (Versanddatum) vorhanden, nimm dieses, sonst berechnetes Lieferdatum (Delivery Date)
+df_final['Datum_Final'] = df_final.apply(lambda x: x['Versanddatum'] if x['Versanddatum'] != '01.01.1900' else x['DeliveryDate'], axis=1 )
 df_final.to_csv(r'L:\PM\AndreasSchmied.csv',index = False, sep=';')
 
+########################################################################################################################
 #Feedback für Schmied
 
 feedback = {}
