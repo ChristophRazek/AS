@@ -6,6 +6,7 @@ import SchmiedUpdate as schmied
 import warnings
 import pandasql as ps
 from datetime import datetime
+import os
 from tkinter import messagebox
 
 warnings.filterwarnings('ignore')
@@ -32,6 +33,9 @@ df_final['Versanddatum'] = df_final['Versanddatum'].fillna(value='01.01.1900')
 df_final['Datum_Final'] = df_final.apply(lambda x: x['Versanddatum'] if x['Versanddatum'] != '01.01.1900' else x['DeliveryDate'], axis=1 )
 df_final.to_csv(r'L:\PM\AndreasSchmied.csv',index = False, sep=';')
 
+#Zeitstempel des AS Erstellungsdatums wird zur Sicherheit ausgegeben
+c_time = os.path.getctime(r'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
+dt_c = datetime.fromtimestamp(c_time)
 ########################################################################################################################
 #Feedback für Schmied
 
@@ -70,7 +74,7 @@ df_duplicates = ps.sqldf(old_duplicates_query)
 
 feedback['Duplicates'] = df_duplicates
 
-
+#Script Log
 with pd.ExcelWriter(r'S:\Schmid\AS_Feedback.xlsx') as writer:
     for key in feedback:
         feedback[key].to_excel(writer, sheet_name=key, index=False)
@@ -78,8 +82,8 @@ with pd.ExcelWriter(r'S:\Schmid\AS_Feedback.xlsx') as writer:
 Email.send_mail()
 
 with open(r'S:\EMEA\Kontrollabfragen\AS_Update.txt', 'w') as f:
-    f.write(f'Last MPS copied at: {d}')
+    f.write(f'Last MPS copied {dt_c}')
     f.close()
 
-messagebox.showinfo('Update Erfolgreich!', 'Das Schmied Update wurde erfolgreich durchgeführt.')
+messagebox.showinfo('Update Erfolgreich!', f'Das Schmied Update mit dem File: {dt_c} wurde erfolgreich durchgeführt.')
 
