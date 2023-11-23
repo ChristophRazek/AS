@@ -44,15 +44,15 @@ d = datetime.today()
 no_atd_query = f"""select * from df_final where ATD is null and ETD < '{d}'"""
 df_no_atd = ps.sqldf(no_atd_query)
 df_no_atd = df_no_atd[['Reference','ETD','ATD','ETA','ATA','DeliveryDate']].drop_duplicates()
-if df_no_atd.shape[0] > 0:
-    feedback['Missing ATD'] = df_no_atd
+
+feedback['Missing ATD'] = df_no_atd
 
 ###Kein ATA
 no_ata_query = f"""select * from df_final where ATA is null and ETA < '{d}'"""
 df_no_ata = ps.sqldf(no_ata_query)
 df_no_ata = df_no_ata[['Reference','ETD','ATD','ETA','ATA','DeliveryDate']].drop_duplicates()
-if df_no_ata.shape[0] > 0:
-    feedback['Missing ATA'] = df_no_ata
+
+feedback['Missing ATA'] = df_no_ata
 
 '''###Zollproblem
 no_customs_info_query = f"""select * from df_final where Zollproblem is null and DeliveryDate < '{d}'"""
@@ -68,9 +68,7 @@ df_duplicates.rename(columns={'Ref.':'Reference'}, inplace=True)
 old_duplicates_query = """select * from df_duplicates where Reference not in (2212017,2304226) """
 df_duplicates = ps.sqldf(old_duplicates_query)
 
-
-if df_duplicates.shape[0] > 0:
-    feedback['Duplicates'] = df_duplicates
+feedback['Duplicates'] = df_duplicates
 
 
 with pd.ExcelWriter(r'S:\Schmid\AS_Feedback.xlsx') as writer:
