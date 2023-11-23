@@ -77,5 +77,9 @@ with pd.ExcelWriter(r'S:\Schmid\AS_Feedback.xlsx') as writer:
 
 Email.send_mail()
 
+with open(r'S:\EMEA\Kontrollabfragen\AS_Update.txt', 'w') as f:
+    f.write(f'Last MPS copied at: {d}')
+    f.close()
+
 messagebox.showinfo('Update Erfolgreich!', 'Das Schmied Update wurde erfolgreich durchgeführt.')
 
