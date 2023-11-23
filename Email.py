@@ -1,6 +1,6 @@
 import win32com.client as win32
 import os
-import pandas as pd
+from datetime import date
 
 def get_mail():
 
@@ -13,7 +13,6 @@ def get_mail():
     messages = inbox.Items.Restrict("[SenderEmailAddress]='as-automate@andreas-schmid.de'")
 
 
-
     for message in messages:
         attachment = message.Attachments
         for a in attachment:
@@ -22,6 +21,22 @@ def get_mail():
             a.SaveAsFile(fr'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
         message.Move(pyfolder)
 
+
+def send_mail():
+
+    receivers = ['michael.pacher@emea-cosmetics.com','christoph.razek@emea-cosmetics.com','Carmen-Monica.Kovacs@andreas-schmid.de','xueyu.xu@andreas-schmid.de ']
+
+    today =date.today()
+    outlook = win32.Dispatch('outlook.application')
+    mail = outlook.CreateItem(0)
+    mail.To = ";".join(receivers)
+    mail.Subject = f'Feedback zu AS Update: {today}'
+    mail.Body = f'Guten Morgen\n \nAnbei findest du die Anmerkungen zu den übermittelten Daten vom {today}.\nBei Fragen bitte um Rückmeldung.\n \nMit freundlichen Grüßen\n \nChristoph Razek, M.Sc.\nERP&Prozessmanager\nemea Handelsgesellschaft mbH\nWallnerstraße 3/22\nA-1010 Wien\nTel.:    +43 1 535 10 01 - 280\nFax:    +43 1 535 10 01 - 900'
+    mail.Attachments.Add(r'S:\Schmid\AS_Feedback.xlsx')
+
+    mail.Display()
+    mail.Save()
+    #mail.Send()
 
 
 

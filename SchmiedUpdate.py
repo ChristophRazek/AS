@@ -3,7 +3,10 @@ import pyodbc
 from ast import literal_eval
 import pandasql as ps
 import warnings
-import Email 
+import Email
+
+
+#Feedback
 
 #IMPORT UND DATENBEREINIGUNG DER ANDREAS SCHMIED INFORMATIONEN
 #ERSTELLUNG DER FEHLERPROTOKOLLE
@@ -19,9 +22,10 @@ def update():
 
     #Import CSV
     df = pd.read_csv(r'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
-    df = df[['Ref.', 'ETD', 'ATD', 'ETA', 'ATA', 'DeliveryDate', 'Zollproblem']]
+    df = df[['Ref.', 'ETD', 'ATD', 'ETA', 'ATA', 'DeliveryDate','Versanddatum', 'Zollproblem']]
     df['Ref.'] = df['Ref.'].str.strip()
     df['Laenge'] = df['Ref.'].str.len()
+
 
     #Aufteilen der Daten in jene mit 1 Referenznummer und jenen mit mehreren
     df_clean = df[df['Laenge'] == 7].drop('Laenge', axis = 'columns')
@@ -39,23 +43,23 @@ def update():
 
 
 
-    #Separate Multiple Ref Numbers
-        #Creating a List-Like Format
+    #Aufteilen von Einträgen, die mehrere GÜLTIGE Referenznummern haben
+    #####Creating a List-Like Format
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].apply(lambda x: '[' + x + ']')
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace('/', ',', regex=True)
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace(',', ',', regex=True)
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].replace(';', ',', regex=True)
     df_mult_ref = df_mult_ref.drop('Laenge', axis ='columns')
 
-        #Pandas Function "Explode" to create rows of List Objects
+    #####Pandas Function "Explode" to create rows of List Objects
     df_mult_ref['Ref.'] = df_mult_ref['Ref.'].apply(literal_eval)
     df_mult_ref=df_mult_ref.explode('Ref.')
 
-    #Combine all valid References
+    #Kombiniere alle Referenznummern (ursprünglich richtige und aufgeteilte)
     query_union = """select * from df_clean union select * from df_mult_ref """
     df_total = ps.sqldf(query_union)
 
-    #Find Duplicates
+    #Finde Duplikate
     df_duplicates = df_total[df_total['Ref.'].duplicated()==True]
     df_total = df_total.drop_duplicates(subset='Ref.')
 
