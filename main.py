@@ -5,7 +5,7 @@ import SQL as s
 import SchmiedUpdate as schmied
 import warnings
 import pandasql as ps
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from tkinter import messagebox
 
@@ -43,7 +43,7 @@ feedback = {}
 ###Kein ATD
 ######Konvertiere als String gespeichertes Datum zu Datumsformat
 df_final[['ETD','ATD','ETA','ATA', 'DeliveryDate']] = df_final[['ETD','ATD','ETA','ATA','DeliveryDate']].apply(pd.to_datetime,format='%d.%m.%Y' )
-d = datetime.today()
+d = datetime.today() + timedelta(days=2)
 
 no_atd_query = f"""select * from df_final where ATD is null and ETD < '{d}'"""
 df_no_atd = ps.sqldf(no_atd_query)
