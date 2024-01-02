@@ -2,10 +2,13 @@ import win32com.client as win32
 import os
 from datetime import date
 
+
 def get_mail():
 
     outlook = win32.Dispatch('Outlook.Application').GetNameSpace('MAPI')
     os.startfile("outlook")
+
+
 
     inbox = outlook.GetDefaultFolder(6)
     pyfolder = inbox.Folders['Schmied']
