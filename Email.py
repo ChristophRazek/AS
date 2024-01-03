@@ -1,28 +1,36 @@
 import win32com.client as win32
 import os
-from datetime import date
+from datetime import date, datetime
 
 
 def get_mail():
 
     outlook = win32.Dispatch('Outlook.Application').GetNameSpace('MAPI')
-    os.startfile("outlook")
-
+    #os.startfile("outlook")
 
 
     inbox = outlook.GetDefaultFolder(6)
     pyfolder = inbox.Folders['Schmied']
 
+    #Filter auf Schmied-Update Emails
     messages = inbox.Items.Restrict("[SenderEmailAddress]='as-automate@andreas-schmid.de'")
-
-
     for message in messages:
-        attachment = message.Attachments
-        for a in attachment:
-            a_name = str(a)
-            a.SaveAsFile(fr'S:\Schmid\AS_Updates\Archiv\{a_name}')
-            a.SaveAsFile(fr'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
-        message.Move(pyfolder)
+
+        #ermittle die Datums-Information der Email
+        received_date = str(message)[-10:]
+        #Wandle die Info in eine Datum um
+        dateobject = datetime.strptime(received_date, '%d.%m.%Y').date()
+
+        #wenn email von heute, dann...
+        if dateobject == date.today():
+            #print(dateobject)
+            attachment = message.Attachments
+            for a in attachment:
+                #print(a)
+                a_name = str(a)
+                a.SaveAsFile(fr'S:\Schmid\AS_Updates\Archiv\{a_name}')
+                a.SaveAsFile(fr'S:\Schmid\AS_Updates\Schmid_Update_neu.csv')
+            message.Move(pyfolder)
 
 
 def send_mail():
