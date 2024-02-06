@@ -35,12 +35,14 @@ def get_mail():
 
 def send_mail():
 
-    receivers = ['michael.pacher@emea-cosmetics.com','rudolf.swerak@emea-cosmetics.com','christoph.razek@emea-cosmetics.com','operation-airsea@andreas-schmid.de']
+    receivers = 'operation-airsea@andreas-schmid.de'
+    cc = ['rudolf.swerak@emea-cosmetics.com','christoph.razek@emea-cosmetics.com']
 
     today =date.today()
     outlook = win32.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
-    mail.To = ";".join(receivers)
+    mail.To = receivers
+    mail.CC = ";".join(cc)
     mail.Subject = f'Feedback zu AS Update'
     mail.Body = f'Guten Morgen\n \nAnbei findest du die Anmerkungen zu den übermittelten Daten.\nBei Fragen bitte um Rückmeldung.\n \nMit freundlichen Grüßen\n \nChristoph Razek, M.Sc.\nERP&Prozessmanager\nemea Handelsgesellschaft mbH\nWallnerstraße 3/22\nA-1010 Wien\nTel.:    +43 1 535 10 01 - 280\nFax:    +43 1 535 10 01 - 900'
     mail.Attachments.Add(r'S:\Schmid\AS_Feedback.xlsx')
