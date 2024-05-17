@@ -36,7 +36,7 @@ def get_mail():
 def send_mail():
 
     receivers = 'operation-airsea@andreas-schmid.de'
-    cc = ['rudolf.swerak@emea-cosmetics.com','christoph.razek@emea-cosmetics.com']
+    cc = ['anton.usanov@emea-cosmetics.com','christoph.razek@emea-cosmetics.com']
 
     today =date.today()
     outlook = win32.Dispatch('outlook.application')
