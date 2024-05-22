@@ -15,6 +15,20 @@ where (bp.STATUS between 3 and 5) -- Ware bereits verschickt
 
   and (ak.STATUS < 4 or ak.STATUS is null) --noch nicht angekommen
   and (bp.PE14_CommentEMEA <> 'eRledigt' or bp.PE14_CommentEMEA is null) --noch nicht angekommen
-  and bp.WARENEINGANGSNR not in  ( 2403100,2403093,2403092,2403105,2402004,2403123,2403138,2403139) --keine Dachser Lieferungen
+  and bp.WARENEINGANGSNR not in  (2403100,
+2403105,
+2403093,
+2403140,
+2404146,
+2403123,
+2403142,
+2404195,
+2404215,
+2404266,
+2403092,
+2403138,
+2403139,
+2403068
+) --keine Dachser Lieferungen
 
   order by bp.WARENEINGANGSNR  """
